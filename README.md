@@ -19,7 +19,7 @@ Precompiled binary can be downloaded from https://meridix.co/2xYUPan
  Edit the report-parameters.json file with a text editor. Then execute the follwing command to create a CSV file called [result.csv]
 
  ```
- MeridixApi.exe report --base-url https://reports.mydomain.com --token TOKEN_HERE -secret SECRET_HERE --output-file result.csv -format csv --languge en-GB
+ MeridixApi.exe report --base-url https://reports.mydomain.com --token TOKEN_HERE --secret SECRET_HERE --output-file result.csv --format csv --languge en-GB
  ```
 
  Use the switches --from-date and --to-date to override the from and to dates specified in the report-parameters.json
