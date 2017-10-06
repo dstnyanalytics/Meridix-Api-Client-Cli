@@ -14,9 +14,15 @@ namespace Meridix.ApiClientCli
     {
         static void Main(string[] args)
         {
-            AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) => Console.WriteLine(eventArgs.ExceptionObject);
+            AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(eventArgs.ExceptionObject);
+                Console.ResetColor();
+            };
 
-            Parser.Default.ParseArguments<ReportApiOptions, StatusApiOptions, ScaffoldOptions>(args)
+            var parser = new Parser(config => config.HelpWriter = Console.Out);
+            parser.ParseArguments<ReportApiOptions, StatusApiOptions, ScaffoldOptions>(args)
                 .MapResult(
                 (ReportApiOptions o) => RunAddAndReturnExitCode(o),
                 (StatusApiOptions o) => RunAddAndReturnExitCode(o),
@@ -94,7 +100,7 @@ namespace Meridix.ApiClientCli
         private static void CreateCsv(ReportApiOptions options, ReportApi reportApi, ReportParametersDto parameters)
         {
             var culture = new CultureInfo(options.Language);
-            var handle = reportApi.BeginGenerateAsBase64(parameters, "csv", new ExportFormatSettings() { IncludeCharts = false, IncludeColumnDescriptions = false }, culture);
+            var handle = reportApi.BeginGenerateAsBase64(parameters, "csv", new ExportFormatSettings { IncludeCharts = false, IncludeColumnDescriptions = false }, culture);
 
             Console.WriteLine($"ExecutionId: {handle.ExecutionId}");
             do
@@ -140,15 +146,17 @@ namespace Meridix.ApiClientCli
                 Console.WriteLine(args.Message);
                 Console.ResetColor();
             };
-            var getWorks = client.StatusApi().CanUseGetVerb();
-            var putWorks = client.StatusApi().CanUsePutVerb();
-            var postWorks = client.StatusApi().CanUsePostVerb();
-            var deleteWorks = client.StatusApi().CanUseDeleteVerb();
 
-            Console.WriteLine("PUT Request: " + (getWorks ? "OK" : "Failed"));
-            Console.WriteLine("PUT Request: " + (putWorks ? "OK" : "Failed"));
-            Console.WriteLine("POST Request: " + (postWorks ? "OK" : "Failed"));
-            Console.WriteLine("DELETE Request: " + (deleteWorks ? "OK" : "Failed"));
+            var statusApi = client.StatusApi();
+            var getWorks = statusApi.CanUseGetVerb();
+            var putWorks = statusApi.CanUsePutVerb();
+            var postWorks = statusApi.CanUsePostVerb();
+            var deleteWorks = statusApi.CanUseDeleteVerb();
+
+            Console.WriteLine("PUT Request:".PadRight(20) + (getWorks ? "OK" : "Failed"));
+            Console.WriteLine("PUT Request:".PadRight(20) + (putWorks ? "OK" : "Failed"));
+            Console.WriteLine("POST Request:".PadRight(20) + (postWorks ? "OK" : "Failed"));
+            Console.WriteLine("DELETE Request:".PadRight(20) + (deleteWorks ? "OK" : "Failed"));
 
             return 0;
         }
