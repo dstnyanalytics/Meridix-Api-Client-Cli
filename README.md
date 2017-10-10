@@ -1,6 +1,6 @@
-﻿# Meridix API Client Command Line Client (CLI)
+﻿# Meridix API Client Command Line Client (CLI) - .NET
 
-Precompiled binary can be downloaded from https://meridix.co/2xYUPan
+Precompiled windows binary can be downloaded from https://meridix.co/2xYUPan
  
  ## Usage
  All command are executed through the command line using a verb e.g. MeridixApi.exe VERB-HERE --parameters-here
